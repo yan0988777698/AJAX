@@ -1,0 +1,48 @@
+﻿@{
+    ViewData["Title"] = "Travel";
+}
+
+<h1>旅遊景點</h1>
+<div class="row row-cols-1 row-cols-md-3 g-4" id="myDiv"></div>
+
+@section Scripts {
+    <script src="~/js/travel.js"></script>
+    <script>
+        let myDiv = document.getElementById("myDiv");
+        let str = "";
+        spots.CommonFormat.Section.forEach((item, sectionIndex) => {
+            str += `
+                    <div class="col">
+                        <div class="card">
+                            <div id="carouselExample${sectionIndex}" class="carousel slide">
+                                <div class="carousel-inner">`;
+            for (let i = 0; i < item.file.img.length; i++) {
+                str += `
+                                    <div class="carousel-item ${i === 0 ? 'active' : ''}">
+                                        <img src="${item.file.img[i].text}" class="d-block w-100" style="height:300px" alt="...">
+                                    </div>`;
+            }
+            str += `
+                                </div>
+                                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample${sectionIndex}" data-bs-slide="prev">
+                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Previous</span>
+                                </button>
+                                <button class="carousel-control-next" type="button" data-bs-target="#carouselExample${sectionIndex}" data-bs-slide="next">
+                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Next</span>
+                                </button>
+                            </div>
+                            <div class="card-body">
+                                        <h5 class="card-title">${item.stitle}</h5>
+                                                <p class="card-text">${item.xbody}</p>
+                            </div>
+                        </div>
+                    </div>`;
+        });
+        myDiv.innerHTML = str;
+    </script>
+
+}
+@section Styles {
+}
