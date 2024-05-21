@@ -1,0 +1,44 @@
+﻿@{
+    ViewData["Title"] = "FirstAjax";
+}
+
+<h1>FirstAjax</h1>
+<img id="img1" src="~/Images/Hourglass.gif" style="display:none" />
+<button class="btn btn-primary" id="btn1">Go Ajax</button>
+<div id="div1"></div>
+
+@section Scripts {
+    <script>
+        let btn = document.querySelector("#btn1")
+        let div = document.querySelector("#div1")
+        let img = document.querySelector("#img1")
+        // btn.addEventListener("click",()=>{
+        //     fetch('@Url.Content("~/Api/ReturnContent")')
+        //     .then(response=> response.text())
+        //     .then(data=> div.innerHTML = data)
+        // })
+
+        btn.addEventListener("click", async () => {
+            try {
+                img.style.display = "inline"
+
+                let promise = await fetch('@Url.Content("~/Api/ReturnContent")')
+                if (!promise.ok)
+                    throw new Error(`${promise.status}`)
+                let data = await promise.text();
+
+                div.innerHTML = `<h2>${data}</h2>`;
+            } catch (error) {
+                div.innerHTML = `<h2>${error}</h2>`;
+            } finally {
+                img.style.display = "none"
+            }
+
+        })
+
+    </script>
+
+}
+@section Styles {
+
+}

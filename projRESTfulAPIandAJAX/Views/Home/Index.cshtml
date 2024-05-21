@@ -1,0 +1,81 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+@section Styles{  
+    <style>
+        h1:hover{
+            background-color : yellow;
+        }
+    </style>
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome to AJAX</h1>
+</div>
+<ul id="myul"></ul>
+<table class="table table-hover">
+    <thead>
+    <tr><td>姓名</td><td>年資</td><td>薪水</td></tr>
+    <thead>
+    <tbody></tbody>
+</table>
+@section Scripts{
+    <script>
+        function printSomething(data){
+            const promise = new Promise((resolve,reject)=>{
+                setTimeout(()=>resolve(data),1000);
+            })
+            return promise;
+        }
+        //Ver 1.0 Nested loop 寫法
+        setTimeout(()=>{
+            console.log("A");
+            setTimeout(()=>{
+                console.log("B");
+                setTimeout(()=>{
+                    console.log("C");
+                },1000)
+            },1000)
+        },1000);
+
+        //Ver 2.0 then 寫法
+        printSomething("A").then(data=>{
+            console.log(data);
+            return printSomething("B")
+        }).then(data=>{
+            console.log(data);
+            return printSomething("C")
+        }).then(data=>{
+            console.log(data);
+        });
+        //Ver 3.0 Async / Await 寫法
+        (async ()=>{
+            let data = await printSomething("A")
+            console.log(data);
+            data = await printSomething("B")
+            console.log(data);
+            data = await printSomething("C")
+            console.log(data);
+        })();
+
+        //讀取JSON資料
+        let emps = {"employees":[
+            {"name":"Tom","workYears":3,"salary":35000},
+            {"name":"Jack","workYears":5,"salary":40000},
+            {"name":"Mary","workYears":7,"salary":45000}
+        ]};
+        for(var emp of emps.employees){
+            console.log(`${emp.name} | ${emp.workYears} | ${emp.salary}`);
+        }
+        //將讀取到的資料以清單呈現
+        let data = emps.employees.map(x=>`<li>${x.name}</li>`).join("");
+        console.log(data);
+        document.getElementById("myul").innerHTML = data;
+
+        //將讀取到的資料以表格呈現
+        data = emps.employees.map(x=>{
+            const {name, workYears, salary} = x;
+            return `<tr><td>${name}</td><td>${workYears}</td><td>${salary}</td></tr>`}).join("");
+        document.querySelector("table > tbody").innerHTML = data;
+    </script>    
+}
