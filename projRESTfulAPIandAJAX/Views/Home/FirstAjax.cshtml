@@ -6,6 +6,7 @@
 <img id="img1" src="~/Images/Hourglass.gif" style="display:none" />
 <button class="btn btn-primary" id="btn1">Go Ajax</button>
 <button class="btn btn-danger" id="btn2">Stop Ajax</button>
+<select class="form-select" id="select1"></select>
 
 <div id="div1"></div>
 
@@ -15,24 +16,29 @@
         let btn2 = document.querySelector("#btn2")
         let div = document.querySelector("#div1")
         let img = document.querySelector("#img1")
+        let select1 = document.querySelector("#select1")
         let abortController;
-        // btn.addEventListener("click",()=>{
+        // 非同步取得文字(then寫法)
+        // btn1.addEventListener("click",()=>{
         //     fetch('@Url.Content("~/Api/ReturnContent")')
         //     .then(response=> response.text())
         //     .then(data=> div.innerHTML = data)
         // })
+
+        //終止async function
         btn2.addEventListener("click", () => {
             abortController.abort()
-        })
+        });
+        // 非同步取得文字(async/await寫法)
         btn1.addEventListener("click", async () => {
             try {
                 img.style.display = "inline"
-                btn1.setAttribute("disabled","disabled")
+                btn1.setAttribute("disabled", "disabled")
 
                 abortController = new AbortController()
                 const signal = abortController.signal
 
-                let promise = await fetch('@Url.Content("~/Api/ReturnContent")', {signal})
+                let promise = await fetch('@Url.Content("~/Api/ReturnContent")', { signal })
                 if (!promise.ok)
                     throw new Error(`${promise.status}`)
                 let data = await promise.text();
@@ -44,8 +50,15 @@
                 img.style.display = "none"
                 btn1.removeAttribute("disabled")
             }
+        });
+        //非同步取得城市列表的JSON，並改寫為<option>標籤
+        (async () => {
+            let response = await fetch('@Url.Content("~/Api/ReturnJson")')
+            let json = await response.json();
+            let cities = json.map(city => `<option value = "${city}">${city}</option>`)
+            select1.innerHTML = cities.join("");
+        })()
 
-        })
 
     </script>
 

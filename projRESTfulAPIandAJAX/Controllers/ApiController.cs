@@ -23,8 +23,12 @@ namespace projRESTfulAPIandAJAX.Controllers
         }
         public IActionResult ReturnJson()
         {
-            var categories = _dbContext.Categories.ToList();
-            return Json(categories);
+            var cities = _dbContext.Addresses.Select(x=>x.City).Distinct();
+            return Json(cities);
+        }
+        public IActionResult Registor(int id, string name, int age = 20)
+        {
+            return Content($"{id}, {name}, {age}","text/plain",Encoding.UTF8);
         }
         public IActionResult ReturnImage(int? id = 1)
         {
