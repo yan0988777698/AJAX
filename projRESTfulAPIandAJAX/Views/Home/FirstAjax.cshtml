@@ -9,12 +9,13 @@
 <select class="form-select" id="select1"></select>
 
 <div id="div1"></div>
-
+<div id="div2"></div>
 @section Scripts {
     <script>
         let btn1 = document.querySelector("#btn1")
         let btn2 = document.querySelector("#btn2")
         let div = document.querySelector("#div1")
+        let div2 = document.querySelector("#div2")
         let img = document.querySelector("#img1")
         let select1 = document.querySelector("#select1")
         let abortController;
@@ -57,8 +58,15 @@
             let json = await response.json();
             let cities = json.map(city => `<option value = "${city}">${city}</option>`)
             select1.innerHTML = cities.join("");
-        })()
+        })();
 
+        //將參數帶入網址，並傳送至Controller
+        (async () => {
+            const url = '@Url.Content("~/Api/Registor")?name=Tom&age=35'
+            const promise = await fetch(url);
+            const data = await promise.text();
+            div2.innerHTML = data;
+        })()
 
     </script>
 

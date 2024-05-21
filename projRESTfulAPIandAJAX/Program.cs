@@ -26,6 +26,6 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Api}/{action=Registor}/{id?}");
+    pattern: "{controller=Home}/{action=FirstAjax}/{id?}");
 
 app.Run();
