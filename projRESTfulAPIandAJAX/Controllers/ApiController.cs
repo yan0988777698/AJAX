@@ -11,10 +11,11 @@ namespace projRESTfulAPIandAJAX.Controllers
     public class ApiController : Controller
     {
         private readonly MyDbContext _dbContext;
-
-        public ApiController(MyDbContext dbContext)
+        private readonly IWebHostEnvironment _env;
+        public ApiController(MyDbContext dbContext, IWebHostEnvironment env)
         {
             _dbContext = dbContext;
+            _env= env;
         }
         public IActionResult Index()
         {
@@ -30,9 +31,23 @@ namespace projRESTfulAPIandAJAX.Controllers
             var cities = _dbContext.Addresses.Select(x => x.City).Distinct();
             return Json(cities);
         }
-        public IActionResult Register(CRegisterViewModel mv)
+        //圖片上傳與儲存
+        public IActionResult Register(Member member,IFormFile img)
         {
-            return Content($"Hello {mv.name}, {mv.age}歲了, 電子郵件是{mv.email}", "text/plain", Encoding.UTF8);
+            string info = $"{img.FileName} - {img.Length} - {img.ContentType}";
+            string path = Path.Combine(_env.WebRootPath, "uploads", img.FileName);
+            using(FileStream stream = new FileStream(path,FileMode.Create))
+            {
+                img.CopyTo(stream);
+            }
+
+            return Content(info, "text/plain", Encoding.UTF8);
+        }
+        public IActionResult CheckUsername(string name)
+        {
+            //TODO
+            bool check = _dbContext.Members.Any(x => x.Name.Equals(name));
+            return Content(check.ToString(), "text/plain", Encoding.UTF8);
         }
         public IActionResult ReturnImage(int? id = 1)
         {

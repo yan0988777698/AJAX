@@ -8,6 +8,7 @@
     <div class="mb-3">
         <label for="name" class="form-label">姓名</label>
         <input type="text" class="form-control" id="name" name="name" autocomplete="off">
+        <div class="alert alert-danger" hidden id="divCheckUser"></div>
     </div>
     <div class="mb-3">
         <label for="email" class="form-label">電子郵件</label>
@@ -27,15 +28,23 @@
         const age = document.getElementById("age");
         const btn = document.getElementById("btn");
         const divInfo = document.getElementById("divInfo");
+        const divCheckUser = document.getElementById("divCheckUser");
         const userForm = document.getElementById("userForm");
 
-        btn.addEventListener("click", async (event) => {
-            event.preventDefault();
-            const url = `@Url.Content("~/Api/Register")`;
+        name.addEventListener("blur", async (event) => {
+            const url = `@Url.Content("~/Api/CheckUsername")`;
             const formData = new FormData(userForm);
-            const promise = await fetch(url, {body:formData,method:'POST'});
-            const data = await promise.text();
-            divInfo.textContent = data;
+            const response = await fetch(url, { body: formData, method: 'POST' });
+            const data = await response.text();
+            if (data == "true") {
+                divCheckUser.textContent = "帳號已存在";
+                divCheckUser.className = "alert-danger";
+            } else {
+                divCheckUser.textContent = "帳號可使用";
+                divCheckUser.className = "alert-success";
+            }
+
+            divCheckUser.removeAttribute("hidden");
         })
     </script>
 }
