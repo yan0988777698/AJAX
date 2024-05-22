@@ -16,7 +16,7 @@ namespace projRESTfulAPIandAJAX.Controllers
         public ApiController(MyDbContext dbContext, IWebHostEnvironment env)
         {
             _dbContext = dbContext;
-            _env= env;
+            _env = env;
         }
         public IActionResult Index()
         {
@@ -33,15 +33,27 @@ namespace projRESTfulAPIandAJAX.Controllers
             return Json(cities);
         }
         //圖片上傳與儲存
-        public IActionResult Register(Member member,IFormFile img)
+        public IActionResult Register(Member member, IFormFile img)
         {
             string info = $"{img.FileName} - {img.Length} - {img.ContentType}";
             string path = Path.Combine(_env.WebRootPath, "uploads", img.FileName);
-            using(FileStream stream = new FileStream(path,FileMode.Create))
+            byte[] data;
+            //圖片存入資料夾
+            using (FileStream stream = new FileStream(path, FileMode.Create))
             {
                 img.CopyTo(stream);
             }
-
+            //圖片轉成二進位
+            using (MemoryStream memoryStream = new MemoryStream())
+            {
+                img.CopyTo(memoryStream);
+                data = memoryStream.ToArray();
+            }
+            //會員資料寫入資料庫
+            member.FileName = img.FileName;
+            member.FileData = data;
+            _dbContext.Members.Add(member);
+            _dbContext.SaveChanges();
             return Content(info, "text/plain", Encoding.UTF8);
         }
         public IActionResult CheckUsername(string name)
