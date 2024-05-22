@@ -18,6 +18,7 @@
             const data = await response.json();
             const distinctions = data.map(distinction => `<option value="${distinction}">${distinction}</option>`);
             distinction.innerHTML = distinctions.join("");
+            loadRoad();
         }
         const loadRoad = async () => {
             const response = await fetch(`@Url.Content("~/Api/GetRoad")?distinction=${distinction.value}`);
@@ -30,7 +31,8 @@
             const data = await response.json();
             const cities = data.map(city => `<option>${city}</option>`);
             city.innerHTML = cities.join("");
-            loadDistinct();
+            await loadDistinct();
+            loadRoad();
         })();
 
         city.addEventListener("change", loadDistinct);

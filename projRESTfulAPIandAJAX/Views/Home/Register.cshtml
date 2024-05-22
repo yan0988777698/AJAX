@@ -1,0 +1,45 @@
+﻿@{
+    ViewData["Title"] = "Register";
+}
+
+<h1>Register</h1>
+<form method="post" action="~/Api/Register">
+    <div class="mb-3">
+        <label for="name" class="form-label">姓名</label>
+        <input type="text" class="form-control" id="name" name="name" autocomplete="off">
+    </div>
+    <div class="mb-3">
+        <label for="email" class="form-label">電子郵件</label>
+        <input type="password" class="form-control" id="email" name="email" autocomplete="off">
+    </div>
+    <div class="mb-3">
+        <label for="age" class="form-label">年紀</label>
+        <input type="number" class="form-control" id="age" name="age">
+    </div>
+    <button type="submit" class="btn btn-primary" id="btn">送出</button>
+    <div class="alert alert-info mt-3" id="divInfo"></div>
+</form>
+
+@section Scripts {
+    <script>
+        const name = document.getElementById("name");
+        const email = document.getElementById("email");
+        const age = document.getElementById("age");
+        const btn = document.getElementById("btn");
+        const divInfo = document.getElementById("divInfo");
+
+        btn.addEventListener("click", async (event) => {
+            event.preventDefault();
+            const url = `@Url.Content("~/Api/Register")?name=${name.value}&email=${email.value}&age=${age.value}`;
+            const promise = await fetch(url);
+            const data = await promise.text();
+            divInfo.textContent = data;
+        })
+
+    </script>
+}
+@section Styles {
+    <style>
+
+    </style>
+}

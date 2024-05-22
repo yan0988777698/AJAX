@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using projRESTfulAPIandAJAX.Models;
+using projRESTfulAPIandAJAX.ViewModels;
 using System.Collections;
 using System.Net;
 using System.Text;
+using System.Xml.Linq;
 
 namespace projRESTfulAPIandAJAX.Controllers
 {
@@ -28,9 +30,9 @@ namespace projRESTfulAPIandAJAX.Controllers
             var cities = _dbContext.Addresses.Select(x => x.City).Distinct();
             return Json(cities);
         }
-        public IActionResult Registor(int id, string name, int age = 20)
+        public IActionResult Register(CRegisterViewModel mv)
         {
-            return Content($"{id}, {name}, {age}", "text/plain", Encoding.UTF8);
+            return Content($"Hello {mv.name}, {mv.age}歲了, 電子郵件是{mv.email}", "text/plain", Encoding.UTF8);
         }
         public IActionResult ReturnImage(int? id = 1)
         {
