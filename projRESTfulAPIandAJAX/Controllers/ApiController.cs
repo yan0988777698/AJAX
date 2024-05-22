@@ -4,6 +4,7 @@ using projRESTfulAPIandAJAX.ViewModels;
 using System.Collections;
 using System.Net;
 using System.Text;
+using System.Text.Unicode;
 using System.Xml.Linq;
 
 namespace projRESTfulAPIandAJAX.Controllers
@@ -45,7 +46,6 @@ namespace projRESTfulAPIandAJAX.Controllers
         }
         public IActionResult CheckUsername(string name)
         {
-            //TODO
             bool check = _dbContext.Members.Any(x => x.Name.Equals(name));
             return Content(check.ToString(), "text/plain", Encoding.UTF8);
         }

@@ -32,18 +32,25 @@
         const userForm = document.getElementById("userForm");
 
         name.addEventListener("blur", async (event) => {
+            if (name.value == "") {
+                divCheckUser.textContent = "請輸入使用者名稱";
+                divCheckUser.className = "alert alert-danger py-1";
+                divCheckUser.removeAttribute("hidden");
+                return;
+            }
             const url = `@Url.Content("~/Api/CheckUsername")`;
             const formData = new FormData(userForm);
             const response = await fetch(url, { body: formData, method: 'POST' });
             const data = await response.text();
-            if (data == "true") {
+            console.log(data);
+            
+            if (data == "True") {
                 divCheckUser.textContent = "帳號已存在";
-                divCheckUser.className = "alert-danger";
+                divCheckUser.className = "alert alert-danger py-1";
             } else {
                 divCheckUser.textContent = "帳號可使用";
-                divCheckUser.className = "alert-success";
+                divCheckUser.className = "alert alert-success py-1";
             }
-
             divCheckUser.removeAttribute("hidden");
         })
     </script>
