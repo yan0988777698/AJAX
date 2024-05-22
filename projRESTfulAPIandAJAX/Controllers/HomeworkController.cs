@@ -18,5 +18,9 @@ namespace projRESTfulAPIandAJAX.Controllers
         {
             return View();
         }
+        public IActionResult CheckUsername()
+        {
+            return View();
+        }
     }
 }

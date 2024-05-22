@@ -1,8 +1,9 @@
-﻿@{
-    ViewData["Title"] = "Register";
+﻿
+@{
+    ViewData["Title"] = "CheckUsername";
 }
 
-<h1>Register</h1>
+<h1>CheckUsername</h1>
 <form method="post" action="~/Api/Register" id="userForm">
     <div class="mb-3">
         <label for="name" class="form-label">姓名</label>
@@ -19,7 +20,6 @@
     <button type="submit" class="btn btn-primary" id="btn">送出</button>
     <div class="alert alert-info mt-3" id="divInfo"></div>
 </form>
-
 @section Scripts {
     <script>
         const name = document.getElementById("name");
@@ -29,12 +29,11 @@
         const divInfo = document.getElementById("divInfo");
         const userForm = document.getElementById("userForm");
 
-        //使用FormData物件 + POST method傳遞資料
         btn.addEventListener("click", async (event) => {
             event.preventDefault();
             const url = `@Url.Content("~/Api/Register")`;
             const formData = new FormData(userForm);
-            const promise = await fetch(url, { body: formData, method: 'POST' });
+            const promise = await fetch(url, {body:formData,method:'POST'});
             const data = await promise.text();
             divInfo.textContent = data;
         })
