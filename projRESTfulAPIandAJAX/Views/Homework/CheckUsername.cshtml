@@ -3,7 +3,7 @@
     ViewData["Title"] = "CheckUsername";
 }
 
-<h1>CheckUsername</h1>
+<h1>檢查使用者名稱是否已存在</h1>
 <form method="post" action="~/Api/Register" id="userForm">
     <div class="mb-3">
         <label for="name" class="form-label">姓名</label>
@@ -34,7 +34,7 @@
         name.addEventListener("blur", async (event) => {
             if (name.value == "") {
                 divCheckUser.textContent = "請輸入使用者名稱";
-                divCheckUser.className = "alert alert-danger py-1";
+                divCheckUser.className = "alert alert-danger my-1 py-1";
                 divCheckUser.removeAttribute("hidden");
                 return;
             }
@@ -46,10 +46,10 @@
             
             if (data == "True") {
                 divCheckUser.textContent = "帳號已存在";
-                divCheckUser.className = "alert alert-danger py-1";
+                divCheckUser.className = "alert alert-danger my-1 py-1";
             } else {
                 divCheckUser.textContent = "帳號可使用";
-                divCheckUser.className = "alert alert-success py-1";
+                divCheckUser.className = "alert alert-success my-1 py-1";
             }
             divCheckUser.removeAttribute("hidden");
         })
