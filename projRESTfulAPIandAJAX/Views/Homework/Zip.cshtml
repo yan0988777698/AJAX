@@ -1,0 +1,44 @@
+﻿@{
+    ViewData["Title"] = "Zip";
+}
+
+<h1>台灣路名</h1>
+<select id="city"><option>請選擇縣市</option></select>
+<select id="distinction"><option>請選擇鄉鎮區</option></select>
+<select id="road"><option>請選擇路名</option></select>
+
+@section Scripts {
+    <script>
+        const city = document.getElementById("city");
+        const distinction = document.getElementById("distinction");
+        const road = document.getElementById("road");
+
+        const loadDistinct = async () => {
+            const response = await fetch(`@Url.Content("~/Api/GetDistinction")?city=${city.value}`);
+            const data = await response.json();
+            const distinctions = data.map(distinction => `<option value="${distinction}">${distinction}</option>`);
+            distinction.innerHTML = distinctions.join("");
+        }
+        const loadRoad = async () => {
+            const response = await fetch(`@Url.Content("~/Api/GetRoad")?distinction=${distinction.value}`);
+            const data = await response.json();
+            const roads = data.map(road => `<option value="${road}">${road}</option>`)
+            road.innerHTML = roads.join("");
+        }
+        (async () => {
+            const response = await fetch('@Url.Content("~/Api/GetCity")');
+            const data = await response.json();
+            const cities = data.map(city => `<option>${city}</option>`);
+            city.innerHTML = cities.join("");
+            loadDistinct();
+        })();
+
+        city.addEventListener("change", loadDistinct);
+        distinction.addEventListener("change", loadRoad);
+    </script>
+}
+@section Styles {
+    <style>
+
+    </style>
+}

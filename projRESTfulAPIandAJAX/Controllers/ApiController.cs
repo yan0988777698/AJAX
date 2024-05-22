@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using projRESTfulAPIandAJAX.Models;
+using System.Collections;
+using System.Net;
 using System.Text;
 
 namespace projRESTfulAPIandAJAX.Controllers
@@ -23,12 +25,12 @@ namespace projRESTfulAPIandAJAX.Controllers
         }
         public IActionResult ReturnJson()
         {
-            var cities = _dbContext.Addresses.Select(x=>x.City).Distinct();
+            var cities = _dbContext.Addresses.Select(x => x.City).Distinct();
             return Json(cities);
         }
         public IActionResult Registor(int id, string name, int age = 20)
         {
-            return Content($"{id}, {name}, {age}","text/plain",Encoding.UTF8);
+            return Content($"{id}, {name}, {age}", "text/plain", Encoding.UTF8);
         }
         public IActionResult ReturnImage(int? id = 1)
         {
@@ -38,6 +40,23 @@ namespace projRESTfulAPIandAJAX.Controllers
             byte[]? img = member.FileData;
             return File(img, "image/jpeg");
         }
+        //取得不重複縣市名稱
+        public IActionResult GetCity()
+        {
+            var cities = _dbContext.Addresses.Select(x => x.City).Distinct();
+            return Json(cities);
+        }
+        //依據選擇的縣市，取得不重複鄉鎮區
+        public IActionResult GetDistinction(string city)
+        {
+            var distinctions = _dbContext.Addresses.Where(x => x.City.Equals(city)).Select(x => x.SiteId).Distinct();
+            return Json(distinctions);
+        }
+        //依據選擇的縣市及鄉鎮區，取得路名
+        public IActionResult GetRoad(string distinction)
+        {
+            var roads = _dbContext.Addresses.Where(x => x.SiteId.Equals(distinction)).Select(x => x.Road);
+            return Json(roads);
+        }
     }
-
 }
