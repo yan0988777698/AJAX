@@ -38,6 +38,10 @@ namespace projRESTfulAPIandAJAX.Controllers
         {
             return View();
         }
+        public IActionResult Spot()
+        {
+            return View();
+        }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

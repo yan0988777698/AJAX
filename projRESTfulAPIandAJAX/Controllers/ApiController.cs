@@ -61,6 +61,11 @@ namespace projRESTfulAPIandAJAX.Controllers
             bool check = _dbContext.Members.Any(x => x.Name.Equals(name));
             return Content(check.ToString(), "text/plain", Encoding.UTF8);
         }
+        //接收JSON檔案時，需要[FromBody]+類別(其屬性與JSON鍵值對應)
+        public IActionResult GetSpot([FromBody] CSpotViewModel cSpotViewModel)
+        {
+            return Json(cSpotViewModel);
+        }
         public IActionResult ReturnImage(int? id = 1)
         {
             Member? member = _dbContext.Members.Find(id);
@@ -87,5 +92,6 @@ namespace projRESTfulAPIandAJAX.Controllers
             var roads = _dbContext.Addresses.Where(x => x.SiteId.Equals(distinction)).Select(x => x.Road);
             return Json(roads);
         }
+
     }
 }

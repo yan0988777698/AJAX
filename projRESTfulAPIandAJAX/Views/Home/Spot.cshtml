@@ -1,0 +1,38 @@
+﻿@{
+    ViewData["Title"] = "Spot";
+}
+
+<h1>Spot</h1>
+
+@section Scripts {
+    <script>
+        // JSON內容
+        const searchData = {
+            "categoryId": 0,
+            "keyword": "",
+            "page": 1,
+            "pageSize": 9,
+            "sortType": "asc",
+            "sortBy": "",
+        };
+        // 傳送JSON資料給Api(body與headers不可省略)
+        (async () => {
+            const response = await fetch('@Url.Content("~/Api/GetSpot")', {
+                'method': 'POST',
+                'body': JSON.stringify(searchData),
+                'headers': {
+                    'Content-Type': 'application/json'
+                }
+            });
+            const spots = await response.json();
+            console.log(spots);
+        })();
+
+
+    </script>
+}
+@section Styles {
+    <style>
+
+    </style>
+}
