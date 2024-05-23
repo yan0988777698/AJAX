@@ -1,0 +1,22 @@
+﻿@{
+    ViewData["Title"] = "Api";
+}
+
+<h1>Api</h1>
+<ul id="ul"></ul>
+
+@section Scripts {
+    <script>
+        const ul = document.getElementById("ul");
+        (async () => {
+            const response = await fetch('https://localhost:7003/api/Categories');
+            const data = await response.json();
+            data.forEach(item => ul.innerHTML += `<li>${item.categoryId} | ${item.categoryName}</li>`);
+        })();
+    </script>
+}
+@section Styles {
+    <style>
+
+    </style>
+}
