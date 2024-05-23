@@ -62,6 +62,7 @@ namespace projRESTfulAPIandAJAX.Controllers
             return Content(check.ToString(), "text/plain", Encoding.UTF8);
         }
         //接收JSON檔案時，需要[FromBody]+類別(其屬性與JSON鍵值對應)
+        [HttpPost]
         public IActionResult GetSpot([FromBody] CSpotDTO cSpotDTO)
         {
             var spots = cSpotDTO.categoryId == 0 ?
@@ -94,6 +95,7 @@ namespace projRESTfulAPIandAJAX.Controllers
             pagingDTO.spotsResult = spots;
             return Json(pagingDTO);
         }
+        //讀取圖片
         public IActionResult ReturnImage(int? id = 1)
         {
             Member? member = _dbContext.Members.Find(id);

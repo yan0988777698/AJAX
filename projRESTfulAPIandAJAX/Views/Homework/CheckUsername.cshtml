@@ -15,6 +15,15 @@
         <input type="password" class="form-control" id="email" name="email" autocomplete="off">
     </div>
     <div class="mb-3">
+        <label for="pwd" class="form-label">密碼</label>
+        <input type="password" class="form-control" id="pwd" name="pwd">
+    </div>
+    <div class="mb-3">
+        <label for="pwdcheck" class="form-label">密碼確認</label>
+        <input type="password" class="form-control" id="pwdcheck" name="pwdcheck">
+        <div class="alert alert-success" hidden id="divCheckPwd"></div>
+    </div>
+    <div class="mb-3">
         <label for="age" class="form-label">年紀</label>
         <input type="number" class="form-control" id="age" name="age">
     </div>
@@ -26,11 +35,19 @@
         const name = document.getElementById("name");
         const email = document.getElementById("email");
         const age = document.getElementById("age");
+        const pwd = document.getElementById("pwd");
+        const pwdcheck = document.getElementById("pwdcheck");
         const btn = document.getElementById("btn");
         const divInfo = document.getElementById("divInfo");
         const divCheckUser = document.getElementById("divCheckUser");
+        const divCheckPwd = document.getElementById("divCheckPwd");
         const userForm = document.getElementById("userForm");
+        pwdcheck.addEventListener("blur", () => {
+            if(pwd.value == pwdcheck.value){
+                console.log("same");
+            }
 
+        })
         name.addEventListener("blur", async (event) => {
             if (name.value == "") {
                 divCheckUser.textContent = "請輸入使用者名稱";
