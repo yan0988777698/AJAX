@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using projAJAX.DTO;
 using projRESTfulAPIandAJAX.Models;
-using projRESTfulAPIandAJAX.ViewModels;
 using System.Collections;
 using System.Net;
 using System.Text;
@@ -62,28 +62,37 @@ namespace projRESTfulAPIandAJAX.Controllers
             return Content(check.ToString(), "text/plain", Encoding.UTF8);
         }
         //接收JSON檔案時，需要[FromBody]+類別(其屬性與JSON鍵值對應)
-        public IActionResult GetSpot([FromBody] CSpotViewModel cSpotViewModel)
+        public IActionResult GetSpot([FromBody] CSpotDTO cSpotDTO)
         {
-            var spots = cSpotViewModel.categoryId == 0 ?
+            var spots = cSpotDTO.categoryId == 0 ?
                 _dbContext.SpotImagesSpots :
-                _dbContext.SpotImagesSpots.Where(x => x.CategoryId == cSpotViewModel.categoryId);
-            if (!string.IsNullOrEmpty(cSpotViewModel.keyword))
+                _dbContext.SpotImagesSpots.Where(x => x.CategoryId == cSpotDTO.categoryId);
+            if (!string.IsNullOrEmpty(cSpotDTO.keyword))
             {
                 spots = spots.Where(
-                    x => x.SpotTitle.Contains(cSpotViewModel.keyword) ||
-                    x.SpotDescription.Contains(cSpotViewModel.keyword));
+                    x => x.SpotTitle.Contains(cSpotDTO.keyword) ||
+                    x.SpotDescription.Contains(cSpotDTO.keyword));
             }
             int totalCount = spots.Count();
-            int pageSize = cSpotViewModel.pageSize;
-            int page = cSpotViewModel.page;
-            int totalPages = (int)Math.Ceiling((decimal)totalCount/ pageSize);
-            spots = spots.Skip((page-1)*pageSize).Take(pageSize);
+            int pageSize = cSpotDTO.pageSize;
+            int page = cSpotDTO.page;
+            int totalPages = (int)Math.Ceiling((decimal)totalCount / pageSize);
+            spots = spots.Skip((page - 1) * pageSize).Take(pageSize);
+            switch (cSpotDTO.sortBy)
+            {
+                case "spotTitle":
+                    spots = cSpotDTO.sortType == "asc" ? spots.OrderBy(x => x.SpotTitle) : spots.OrderByDescending(x => x.SpotTitle);
+                    break;
+                default:
+                    spots = cSpotDTO.sortType == "asc" ? spots.OrderBy(x => x.SpotId) : spots.OrderByDescending(x => x.SpotId);
+                    break;
+            }
 
-            CSpotPagingViewModel pagingVM = new CSpotPagingViewModel();
-            pagingVM.totalPages = totalPages;
-            pagingVM.totalCount = totalCount;
-            pagingVM.spotsResult = spots;
-            return Json(pagingVM);
+            CSpotPagingDTO pagingDTO = new CSpotPagingDTO();
+            pagingDTO.totalPages = totalPages;
+            pagingDTO.totalCount = totalCount;
+            pagingDTO.spotsResult = spots;
+            return Json(pagingDTO);
         }
         public IActionResult ReturnImage(int? id = 1)
         {

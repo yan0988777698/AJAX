@@ -1,6 +1,6 @@
-﻿namespace projRESTfulAPIandAJAX.ViewModels
+﻿namespace projAJAX.DTO
 {
-    public class CSpotViewModel
+    public class CSpotDTO
     {
         public int categoryId { get; set; } = 0;
         public string? keyword { get; set; }
