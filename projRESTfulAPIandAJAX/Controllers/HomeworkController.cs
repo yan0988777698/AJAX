@@ -22,5 +22,9 @@ namespace projRESTfulAPIandAJAX.Controllers
         {
             return View();
         }
+        public IActionResult Spot()
+        {
+            return View();
+        }
     }
 }

@@ -10,7 +10,7 @@
             <ul class="pagination pagination-sm" id="ul"></ul>
         </nav>
     </div>
-    <div class="col-3"><input type="text" class="form-control" id="searchtxt"></input></div>
+    <div class="col-3"><input type="text" class="form-control" id="searchtxt" placeholder="搜尋景點"/></div>
     <div class="row row-cols-1 row-cols-md-3 g-4" id="spotdiv"></div>
 </div>
 @section Scripts {
@@ -20,7 +20,7 @@
         const ul = document.getElementById("ul");
         // JSON內容
         const searchData = {
-            "categoryId": 0,
+            "categoryId": 1,
             "keyword": "",
             "page": 1,
             "pageSize": 9,
@@ -39,23 +39,27 @@
             const spots = await response.json();
             console.log(spots);
             //顯示景點資料
-            const data = spots.spotsResult.map(x => 
+            const data = spots.spotsResult.map(x =>
                 `<div class="col">
-                    <div class="card">
-                        <img src="${x.spotImage}" class="card-img-top" alt="${x.spotTitle}">
-                        <div class="card-body">
-                            <h5 class="card-title">${x.spotTitle}</h5>
-                            <p class="card-text">${x.spotDescription.substring(0,100)}...</p>
-                        </div>
-                        <div class="card-footer">
-                            <small class="text-body-secondary">${x.address}</small>
-                        </div>
-                    </div>
-                </div>`);
+                            <div class="card">
+                                <img src="${x.spotImage}" class="card-img-top" alt="${x.spotTitle}">
+                                <div class="card-body">
+                                    <h5 class="card-title">${x.spotTitle}</h5>
+                                    <p class="card-text">${x.spotDescription.substring(0, 100)}...</p>
+                                </div>
+                                <div class="card-footer">
+                                    <small class="text-body-secondary">${x.address}</small>
+                                </div>
+                            </div>
+                        </div>`);
             spotdiv.innerHTML = data.join("");
             //顯示分頁按鈕
+            let str = "";
+            for (let i = 1; i <= spots.totalPages; i++) {
+                str += `<li class="page-item" onclick="searchData.page = ${i}; loadData();"><a class="page-link" >${i}</a></li>`;
+            }
+            ul.innerHTML = str;
 
-            
         };
         loadData();
 
