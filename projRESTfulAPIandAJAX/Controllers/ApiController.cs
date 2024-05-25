@@ -95,6 +95,12 @@ namespace projRESTfulAPIandAJAX.Controllers
             pagingDTO.spotsResult = spots;
             return Json(pagingDTO);
         }
+        [HttpPost]
+        public IActionResult GetCategories()
+        {
+            var categories = _dbContext.Categories;
+            return Json(categories);
+        }
         //讀取圖片
         public IActionResult ReturnImage(int? id = 1)
         {

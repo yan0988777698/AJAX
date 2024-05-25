@@ -2,22 +2,27 @@
     ViewData["Title"] = "Spot";
 }
 
-<h1>觀光景點</h1>
+<h1>台北市觀光景點</h1>
 <div class="row">
-    <div class="col-3"></div>
-    <div class="col-6">
-        <nav>
-            <ul class="pagination pagination-sm" id="ul"></ul>
-        </nav>
+    <div class="col-3"><select id="selectPagesize"></select></div>
+    <div class="col-6 text-center">
+        <ul class="pagination pagination-sm d-inline-flex" id="ul"></ul>
     </div>
-    <div class="col-3"><input type="text" class="form-control" id="searchtxt" placeholder="搜尋景點"/></div>
+    <div class="col-3"><input type="text" class="form-control" id="searchtxt" placeholder="搜尋景點" /></div>
+    <div class="list-group list-group-horizontal" id="categorydiv">
+        <button type="button" class="list-group-item list-group-item-action">A second button item</button>
+    </div>
     <div class="row row-cols-1 row-cols-md-3 g-4" id="spotdiv"></div>
+
+
 </div>
 @section Scripts {
     <script>
         const spotdiv = document.getElementById("spotdiv");
         const searchtxt = document.getElementById("searchtxt");
         const ul = document.getElementById("ul");
+        const categorydiv = document.getElementById("categorydiv");
+        const selectPagesize = document.getElementById("selectPagesize");
         // JSON內容
         const searchData = {
             "categoryId": 1,
@@ -41,22 +46,23 @@
             //顯示景點資料
             const data = spots.spotsResult.map(x =>
                 `<div class="col">
-                            <div class="card">
-                                <img src="${x.spotImage}" class="card-img-top" alt="${x.spotTitle}">
-                                <div class="card-body">
-                                    <h5 class="card-title">${x.spotTitle}</h5>
-                                    <p class="card-text">${x.spotDescription.substring(0, 100)}...</p>
-                                </div>
-                                <div class="card-footer">
-                                    <small class="text-body-secondary">${x.address}</small>
-                                </div>
-                            </div>
-                        </div>`);
+                    <div class="card">
+                        <img src="${x.spotImage}" class="card-img-top" alt="${x.spotTitle}">
+                        <div class="card-body">
+                            <h5 class="card-title">${x.spotTitle}</h5>
+                            <p class="card-text">${x.spotDescription.substring(0, 100)}...</p>
+                        </div>
+                        <div class="card-footer">
+                            <small class="text-body-secondary">${x.address}</small>
+                        </div>
+                    </div>
+                </div>`);
             spotdiv.innerHTML = data.join("");
             //顯示分頁按鈕
             let str = "";
+            let currentPage = searchData.page;
             for (let i = 1; i <= spots.totalPages; i++) {
-                str += `<li class="page-item" onclick="searchData.page = ${i}; loadData();"><a class="page-link" >${i}</a></li>`;
+                str += `<li class="page-item" onclick="searchData.page = ${i}; loadData();"><a class="page-link" href="#">${i}</a></li>`;
             }
             ul.innerHTML = str;
 
@@ -68,8 +74,30 @@
                 searchData.keyword = event.target.value;
                 loadData();
             }
-        })
+        });
 
+        //顯示類別
+        (async () => {
+            const response = await fetch('@Url.Content("~/Api/GetCategories")', { method: 'POST' });
+            const data = await response.json();
+            console.log(data);
+            const categories = data.map(x =>
+                `<button type="button" class="list-group-item list-group-item-action" onclick="searchData.categoryId = ${x.categoryId}; loadData();">${x.categoryName}</button>`);
+            categorydiv.innerHTML = categories.join("");
+        })();
+
+        //顯示每個頁面要呈現幾筆資料
+        (() => {
+            let str = "";
+            for (let i = 9; i <= 36; i += 9) {
+                str += `<option value ="${i}">每頁${i}筆資料</option>`;
+            }
+            selectPagesize.innerHTML = str;
+            selectPagesize.addEventListener("change", function() {
+                searchData.pageSize = parseInt(this.value);
+                loadData();
+            })
+        })();
     </script>
 }
 @section Styles {
