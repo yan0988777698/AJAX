@@ -6,12 +6,26 @@
 <select id="city"><option>請選擇縣市</option></select>
 <select id="distinction"><option>請選擇鄉鎮區</option></select>
 <select id="road"><option>請選擇路名</option></select>
+<h2 id="h2"></h2>
 
 @section Scripts {
     <script>
         const city = document.getElementById("city");
         const distinction = document.getElementById("distinction");
         const road = document.getElementById("road");
+        const h2 = document.getElementById("h2");
+
+        road.addEventListener("change", () => {
+            h2.innerText = distinction.value + road.value;
+        })
+
+        const loadRoad = async () => {
+            const response = await fetch(`@Url.Content("~/Api/GetRoad")?distinction=${distinction.value}`);
+            const data = await response.json();
+            const roads = data.map(road => `<option value="${road}">${road}</option>`)
+            road.innerHTML = roads.join("");
+            h2.innerText = distinction.value + road.value;
+        }
 
         const loadDistinct = async () => {
             const response = await fetch(`@Url.Content("~/Api/GetDistinction")?city=${city.value}`);
@@ -20,12 +34,7 @@
             distinction.innerHTML = distinctions.join("");
             loadRoad();
         }
-        const loadRoad = async () => {
-            const response = await fetch(`@Url.Content("~/Api/GetRoad")?distinction=${distinction.value}`);
-            const data = await response.json();
-            const roads = data.map(road => `<option value="${road}">${road}</option>`)
-            road.innerHTML = roads.join("");
-        }
+
         (async () => {
             const response = await fetch('@Url.Content("~/Api/GetCity")');
             const data = await response.json();

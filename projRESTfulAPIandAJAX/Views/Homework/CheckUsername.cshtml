@@ -17,6 +17,7 @@
     <div class="mb-3">
         <label for="pwd" class="form-label">密碼</label>
         <input type="password" class="form-control" id="pwd" name="pwd">
+        <div class="alert alert-success" hidden id="divPwd"></div>
     </div>
     <div class="mb-3">
         <label for="pwdcheck" class="form-label">密碼確認</label>
@@ -40,14 +41,11 @@
         const btn = document.getElementById("btn");
         const divInfo = document.getElementById("divInfo");
         const divCheckUser = document.getElementById("divCheckUser");
+        const divPwd = document.getElementById("divPwd");
         const divCheckPwd = document.getElementById("divCheckPwd");
         const userForm = document.getElementById("userForm");
-        pwdcheck.addEventListener("blur", () => {
-            if(pwd.value == pwdcheck.value){
-                console.log("same");
-            }
-
-        })
+        
+        //檢查使用者名稱是否存在
         name.addEventListener("blur", async (event) => {
             if (name.value == "") {
                 divCheckUser.textContent = "請輸入使用者名稱";
@@ -60,7 +58,7 @@
             const response = await fetch(url, { body: formData, method: 'POST' });
             const data = await response.text();
             console.log(data);
-            
+
             if (data == "True") {
                 divCheckUser.textContent = "帳號已存在";
                 divCheckUser.className = "alert alert-danger my-1 py-1";
@@ -69,6 +67,28 @@
                 divCheckUser.className = "alert alert-success my-1 py-1";
             }
             divCheckUser.removeAttribute("hidden");
+        });
+        //檢查密碼兩次輸入是否相同
+        pwdcheck.addEventListener("blur", () => {
+            if (pwd.value == "") {
+                divPwd.innerText = "請輸入密碼";
+                divPwd.removeAttribute("hidden");
+                divPwd.setAttribute("class", "alert alert-danger my-1 py-1");
+                return;
+            }
+            if (pwd.value === pwdcheck.value) {
+                divCheckPwd.innerText = "密碼相同";
+                divCheckPwd.setAttribute("class", "alert alert-success my-1 py-1");
+            }
+            else{
+                divCheckPwd.innerText = "密碼不同";
+                divCheckPwd.setAttribute("class", "alert alert-danger my-1 py-1");
+            }
+            divCheckPwd.removeAttribute("hidden");
+        })
+        pwd.addEventListener("focus", () => {
+            divPwd.setAttribute("hidden", "hidden");
+            divCheckPwd.setAttribute("hidden", "hidden");
         })
     </script>
 }
